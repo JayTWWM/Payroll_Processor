@@ -32,12 +32,12 @@ contract PayrollProcessor {
         bool _isEmployer
     ) public returns (uint256) {
         require(
-            UserLookup[_email] == address(0),
-            "This email is already used!"
-        );
-        require(
             UserStore[msg.sender].addr == address(0),
             "You Already Have An Account!"
+        );
+        require(
+            UserLookup[_email] == address(0),
+            "This email is already used!"
         );
         Library.User storage newUser = UserStore[msg.sender];
         newUser.name = _name;
@@ -66,7 +66,7 @@ contract PayrollProcessor {
     function createJob(string memory _profile,bool _isMonthly,uint _payAmount,uint _leaveDeduction,uint _delayPenalty) public returns (uint256) {
         require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
         require(UserStore[msg.sender].isEmployer,"Not an employer!");
-        require(JobStore[_profile].employerAddr  == address(0),"Profile already exists!");
+        require(JobStore[_profile].employerAddr == address(0),"Profile already exists!");
         Library.Job storage newJob = JobStore[_profile];
         newJob.profile = _profile;
         newJob.employerAddr = msg.sender;
@@ -85,7 +85,7 @@ contract PayrollProcessor {
     function joinJob(string memory _profile) public returns (uint256) {
         require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
         require(!UserStore[msg.sender].isEmployer,"Not an employee!");
-        require(JobStore[_profile].employerAddr  != address(0),"Profile Does not exist.");
+        require(JobStore[_profile].employerAddr != address(0),"Profile Does not exist.");
         UserStore[msg.sender].jobCount++;
         UserStore[msg.sender].jobs[UserStore[msg.sender].jobCount] = _profile;
         JobStore[_profile].employeeCount++;
