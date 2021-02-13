@@ -55,9 +55,9 @@ function signup() {
     return false;
 }
 
-function add_job(){
+function add_job() {
     var form = document.getElementById("add_role_form");
-    PayrollProcessorContract.methods.createJob(form["role_name"].value,form["type_of_work"].value=='Monthly',form["pay_amount"].value,form["leave_deduction"].value,form["delay_penalty"].value)
+    PayrollProcessorContract.methods.createJob(form["role_name"].value, form["type_of_work"].value == 'Monthly', form["pay_amount"].value, form["leave_deduction"].value, form["delay_penalty"].value)
         .send()
         .then(result => {
             if (result.status === true) {
@@ -102,19 +102,66 @@ function add_job(){
     // cell8.innerHTML = '<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#join"><i class="fas fa-plus"></i>&nbsp;Add Employee</a>'
 }
 
-function join_job(){
+function join_job() {
     var form = document.getElementById("Add_job");
     var d = new Date();
     var n = d.getTime();
     var endDate = Date.parse(form["end_datetime"].value);
-    console.log(form["profile"].value,endDate/1000);
-    PayrollProcessorContract.methods.joinJob(form["profile"].value,(endDate-n)/1000)
+    console.log(form["profile"].value, endDate / 1000);
+    PayrollProcessorContract.methods.joinJob(form["profile"].value, (endDate - n) / 1000)
         .send()
         .then(result => {
             if (result.status === true) {
                 alert("Success");
                 console.log(result);
                 window.location.reload();
+            }
+        });
+}
+
+function calculate_payment() {
+    // var queryString = decodeURIComponent(window.location.search);
+    // queryString = queryString.substring(1);
+    // var queries = queryString.split("&");
+    // profile = queries[0].split("=")[1];
+    const urlParams = new URLSearchParams(window.location.search);
+    const profile = urlParams.get('profile');
+    var extra = 0;
+    for (const a in obj) {
+        console.log(obj[a])
+        extra = extra + Number(obj[a])
+    }
+    console.log(profile, currentEmployee, document.getElementById("leave").value, document.getElementById("delay").value, document.getElementById("amount_of_work").value, extra);
+    PayrollProcessorContract.methods.calculatePayment(profile, currentEmployee, document.getElementById("leave").value, document.getElementById("delay").value, document.getElementById("amount_of_work").value, extra)
+        .call((error, response) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(response);
+                document.getElementById('payment').value = response[0];
+                document.getElementById('pay_button').style.display = "block";
+            }
+        });
+}
+
+function make_payment() {
+    var email = currentEmployee;
+    var amount = parseInt(document.getElementById('payment').value);
+    // var queryString = decodeURIComponent(window.location.search);
+    // queryString = queryString.substring(1);
+    // var queries = queryString.split("&");
+    // profile = queries[0].split("=")[1];
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const profile = urlParams.get('profile');
+    console.log(profile, email, amount)
+    var purpose = profile;
+    PayrollProcessorContract.methods.makeTransfer(email, amount, purpose)
+        .send()
+        .then(result => {
+            if (result.status === true) {
+                alert("Success");
+                console.log(result);
             }
         });
 }

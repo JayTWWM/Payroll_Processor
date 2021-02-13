@@ -151,7 +151,8 @@ contract PayrollProcessor {
         return (UserStore[acc].email,UserStore[acc].name,stTime,dur);
     }
 
-    function calculatePayment(string memory _profile,string memory _email,uint _leaves, uint _delays, uint _unitsWorked, uint extra) public view returns (uint,uint,uint,uint,uint) {
+    function calculatePayment(string memory _profile,string memory _email,uint _leaves, uint _delays, uint _unitsWorked, uint extra)
+    public view returns (uint,uint,uint,uint,uint) {
         require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
         require(UserStore[msg.sender].isEmployer,"Not an employer!");
         require(JobStore[_profile].employerAddr != address(0),"Profile Does not exist.");
@@ -160,12 +161,23 @@ contract PayrollProcessor {
         uint leaves = JobStore[_profile].leaveDeduction*_leaves;
         uint delay = JobStore[_profile].delayPenalty*_delays;
         return (worked+extra-leaves-delay,worked,leaves,delay,extra);
-    } 
-    
+    }
+
+    function makeTransfer(string memory _email, uint _amount, string memory _purpose) public returns (uint) {
+        require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
+        require(UserLookup[_email] != address(0),"Receiver Does not exist.");
+        EliteToken tokenContract;
+        require(tokenContract.approve(msg.sender,_amount),"Amount not approved!");
+        require(tokenContract.transferFrom(msg.sender,UserLookup[_email],_amount),"Transaction Failed");
+        UserStore[msg.sender].payCount++;
+        UserStore[msg.sender].payments[UserStore[msg.sender].payCount] = Library.Payment(msg.sender,UserLookup[_email],_amount,block.timestamp,_purpose,"ELT");
+        emit TransferMoney(_email,UserStore[msg.sender].email,_amount,_purpose);
+    }
+
     event UserCreate(string name,string email,bool isEmployer);
     event CreateJob(string email,string profile, bool isMonthly, uint payAmount, uint leaveDeduction, uint delayPenalty);
     event JoinJob(string email,string profile);
-    event TransferMoney(string email_receiver,string email_sender,uint amount);
+    event TransferMoney(string email_receiver,string email_sender,uint amount,string purpose);
 }
 
 // contract EliteTokenSale {

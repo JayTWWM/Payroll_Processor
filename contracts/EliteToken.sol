@@ -28,7 +28,7 @@ contract EliteToken {
     }
 
     function transfer(address _to, uint256 _value) public returns (bool success) {
-        require(balanceOf[msg.sender] >= _value);
+        require(balanceOf[msg.sender] >= _value,"Not enough Funds!");
 
         balanceOf[msg.sender] -= _value;
         balanceOf[_to] += _value;
@@ -47,8 +47,8 @@ contract EliteToken {
     }
 
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
-        require(_value <= balanceOf[_from]);
-        require(_value <= allowance[_from][msg.sender]);
+        require(_value <= balanceOf[_from],"Not enough Funds!");
+        require(_value <= allowance[_from][msg.sender],"Not enough Allowance!");
 
         balanceOf[_from] -= _value;
         balanceOf[_to] += _value;
