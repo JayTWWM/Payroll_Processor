@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Inventory Management</title>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit-no">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+
+  <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.js" charset="utf-8"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="./index.js" type="text/javascript"></script>
+  <script src="./src/js/app.js" type="text/javascript"></script>
+  <script src="./src/js/emp.js" type="text/javascript"></script>
+
+  <script src="src/js/vendor/modernizr-2.8.3.min.js"></script>
+  <script src="src/js/vendor/jquery-1.12.0.min.js"></script>
+  <script src="./vendor/jquery/dist/jquery.min.js"></script>
+	 
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js">
+    	
+    </script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <!-- <script type="text/javascript" src="js/main.js"></script> -->
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js">
+    	
+    </script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
+    <!-- <script type="text/javascript" src="./table.js"></script> -->
+    <!-- <script type="text/javascript" src="./job.js"></script> -->
+    <style type="text/css">
+    	#category_add_modal
+		{
+		    background: rgba(240, 248, 255, 0.18);
+		}
+		#product_name_for_order:link
+		{
+			text-decoration: none;
+		}
+		#product_name_for_order:hover
+		{
+			text-decoration: underline;
+		}
+		#product_id_for_order:link
+		{
+			text-decoration: none;
+		}
+		#product_id_for_order:hover
+		{
+			text-decoration: underline;
+		}
+    </style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand"><i class="fas fa-warehouse"></i>&nbsp;&nbsp;Payroll System</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active ">
+              <!-- <a class="nav-link" href="dashboard.php"><i class="fa fa-home"></i>&nbsp;Home</a> -->
+            </li>
+            
+            
+          </ul>
+          
+          
+        </div>
+      </nav>
+
+<div class="container" style="margin-top:2%;margin-bottom: 2%">
+	    <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>
+                  
+                  <li class="breadcrumb-item"><a href="jobs.html">Jobs</a></li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            
+            <h1 class="h2 mt-4">Jobs</h1>
+              <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group mr-2">
+                </div>
+                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#product_add_modal" id="product_manage_modal_button"><i class="fas fa-plus" ></i>&nbsp;Add Role</a>
+              </div>
+            </div>
+          
+          <div class="mt-4" style="display: block;">
+            <table id="example" class="display" style="width:100%; font-size: 18px;">
+                <thead>
+                    <tr>
+                        <th>Sr.</th>
+                              <th>Name</th>
+                              <th>Start</th>
+                              <th>End</th>
+                              <th>Email</th>
+                              <th>Pay</th>
+                        
+                        
+                    </tr>
+                </thead>
+                 <tbody id="job_body" class="table table-striped">
+        
+                    
+                    
+                        <!-- <tr>
+                            <td style="padding: 2%;">1</td>
+                            <td ><a href="/job.html?job=Free%20Lance" style="text-decoration: none; color: black;">Free Lance</a></td>
+                            <td>10</td>
+                            
+                            <td><a href="#" class="btn btn-primary" data-toggle="modal" data-target="#join"><i class="fas fa-plus"></i>&nbsp;Add Employee</a></td>
+                        </tr>
+                    
+                        <tr>
+                          <td style="padding: 2%;">1</td>
+                          <td ><a href="/job.html?job=Free%20Lance" style="text-decoration: none; color: black;">Free Lance</a></td>
+                          <td>10</td>
+                          
+                          <td><a href="#" class="btn btn-primary" data-toggle="modal" data-target="#join"><i class="fas fa-plus"></i>&nbsp;Add Employee</a></td>
+                      </tr> -->
+        
+                </tbody>
+                        <tfoot>
+                            <tr>
+                              <th>Sr.</th>
+                              <th>Name</th>
+                              <th>Start</th>
+                              <th>End</th>
+                              <th>Email</th>
+                             <th>Pay</th>
+                                
+                            </tr>
+                        </tfoot>
+                    </table>
+          </div>
+</div>
+		    
+<div class="modal" tabindex="-1" role="dialog" id="join">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Address</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <input type="text" class="form-control" name="" id="">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="pay_employee">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Payment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" id="pay_employee_form" onsubmit="return false">
+        <label for="employee_name" class="form-control-label">Payment To</label>
+        <input type="text" name="employee_name" class="form-control" id="employee_name" readonly value="">
+        <label for="amount_of_work" class="form-control-label" id="label_type_of_work"></label>
+        <input type="number" name="amount_of_work" class="form-control" id="amount_of_work">
+
+        <label for="leave" class="form-control-label">Enter Leaves</label>
+        <input type="number" name="leave" class="form-control" id="leave">
+
+        <label for="delay" class="form-control-label" >Enter Delay</label>
+        <input type="number" name="delay" class="form-control" id="delay">
+        
+        <label for="">Extra Options</label>
+
+       
+      </form>
+      <label for="payment" class="form-control-label mt-2">Payment</label>
+      <input type="text" class="form-control" readonly id="payment" value="0">
+      <button class="btn btn-primary mt-4 d-block" onclick="add_extra_options()">Extra Options</button>
+      
+
+      </div>
+      <div class="modal-footer">
+        <center>
+        <button class="btn btn-success" onclick="calculate_payment()">Calculate Payment</button>
+        </center>
+      </div>
+    </div>
+  </div>
+  </div>
+
+<script>
+   
+</script>
+
+<script>
+  // const urlParams = new URLSearchParams(window.location.search);
+  // const myParam = urlParams.get('jobid');
+  // var i = 0;
+  // var obj ={}
+  // var options = ["Travelling Reimbusment","Signin Bonus","Providend Fund","Overtime Bonus","Festival Bonus"]
+  // console.log(myParam)
+  // job= jobs[Number(myParam)]
+  // console.log(job)
+  // employees = job["employees"]
+  // employees.forEach((element,index) => {
+  //     var table = document.getElementById("job_body");
+  //     var row = table.insertRow(index);
+  //     var cell1 = row.insertCell(0);
+  //     var cell2 = row.insertCell(1);
+  //     var cell3 = row.insertCell(2);
+  //     var cell4 = row.insertCell(3);
+  //     var cell5 = row.insertCell(4);
+  //     var cell6 = row.insertCell(5);
+
+      
+
+  //     cell1.innerHTML = index+1;
+  //     cell2.innerHTML = element["Name"];
+  //     cell3.innerHTML = element["Start Date"]
+  //     cell4.innerHTML = element["End Date"]
+  //     cell5.innerHTML = element["Email"]
+  //     cell6.innerHTML = '<button href="#" onclick="pay_employee('+index+')" id="'+index+'" class="btn btn-primary" data-toggle="modal" data-target="#pay_employee">Pay Employee</button>'
+      
+  // })
+  function pay_employee(index)
+{
+
+   document.getElementById("employee_name").value  = employees[index]["Name"]
+   document.getElementById("label_type_of_work").innerHTML  = "Enter in "+ ((job["type_of_work"] == "Hourly")?"Hours":"Months")
+   
+
+}
+function calculate_payment(){
+   document.getElementById("payment").value=0
+   console.log(Number(document.getElementById("amount_of_work").value)*job["pay_amount"])
+   console.log(document.getElementById("amount_of_work").value*job["pay_amount"] - document.getElementById("leave").value*job["leave_deduction"] - document.getElementById("delay").value*job["delay_penalty"])
+  document.getElementById("payment").value =Number(document.getElementById("payment").value) + document.getElementById("amount_of_work").value*job["pay_amount"] - document.getElementById("leave").value*job["leave_deduction"] - document.getElementById("delay").value*job["delay_penalty"]
+  for(const a in obj)
+  {
+      console.log(obj[a])
+      document.getElementById("payment").value =Number(document.getElementById("payment").value) + Number(obj[a])
+  }
+
+}
+
+function add_extra_options(){
+  console.log(++i)
+  var s = document.createElement("select"); //input element, text
+  var row = document.createElement("div")
+  s.setAttribute('name',"select"+i);
+  s.setAttribute('class',"form-control mt-2");
+  row.appendChild(s)
+  options.forEach((element,index)=>{
+      var option = document.createElement("option"); 
+      option.value=index 
+      option.text = element; 
+  s.add(option)
+  })
+  var input = document.createElement("input"); //input element, text
+  input.setAttribute('type',"number");
+  input.setAttribute('name',"option"+i);
+  input.setAttribute('class',"form-control mt-2");
+  row.appendChild(input)
+  document.getElementById("pay_employee_form").appendChild(row)
+  input.addEventListener('input',()=>{
+      console.log("Hello");
+      obj[i]= Number(input.value)
+  })
+  
+  
+  console.log(obj)
+}
+</script>
+
+</body>
+</html>

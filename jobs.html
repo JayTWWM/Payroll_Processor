@@ -105,7 +105,7 @@
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
                 </div>
-                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#product_add_modal" id="product_manage_modal_button"><i class="fas fa-plus" ></i>&nbsp;Add Job</a>
+                <a class="btn btn-primary" data-toggle="modal" data-target="#product_add_modal" id="product_manage_modal_button"><i class="fas fa-plus" ></i>&nbsp;Add Job</a>
             </div>
         </div>
 
@@ -126,33 +126,6 @@
                     </tr>
                 </thead>
                 <tbody id="product_body" class="table table-striped">
-
-
-
-                    <tr>
-                        <td>1</td>
-                        <td>Company 1 </td>
-                        <td>Free Lance</td>
-                        <td>13/01/2021</td>
-                        <td>15/02/2021</td>
-                        <td>10</td>
-                        <td>0</td>
-                        <td>10000</td>
-                        <td><a href="#" class="btn btn-primary"><i class="fas fa-envelope"></i>&nbsp;Email Employeer</a></td>
-                    </tr>
-
-                    <tr>
-                        <td>1</td>
-                        <td>Company 2 </td>
-                        <td>Free Lance</td>
-                        <td>13/01/2021</td>
-                        <td>15/02/2021</td>
-                        <td>10</td>
-                        <td>0</td>
-                        <td>10000</td>
-                        <td><a href="#" class="btn btn-primary"><i class="fas fa-envelope"></i>&nbsp;Email Employeer</a></td>
-                    </tr>
-
                 </tbody>
                 <!-- <tfoot>
                     <tr>
@@ -172,23 +145,30 @@
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" role="dialog" id="join">
+    <div class="modal" tabindex="-1" role="dialog" id="product_add_modal">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Address</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-                </div>
-                <div class="modal-body">
-
-                    <input type="text" class="form-control" name="" id="">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Add Job</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
+            <div class="modal-body">
+              <form action="" id = "Add_job" onsubmit="return false">
+                <label for="profile" class="form-control-label">Enter Job Profile</label>
+                <input type="text" class="form-control" name="profile" id="profile">
+                <label for="end_datetime" class="form-control-label">End (date and time):</label>
+                <input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime">
+      
+                <button type="submit" onclick = "join_job()" class="btn btn-success mt-4"><i class="fas fa-plus"></i>&nbsp;Join Job</button>
+              </form>
+    
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+          </div>
         </div>
 
 </body>

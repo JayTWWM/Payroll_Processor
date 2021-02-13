@@ -43,7 +43,7 @@ function signup() {
         alert("Password too short");
         return false;
     } else {
-        PayrollProcessorContract.methods.createUser(name.value, email.value, password.value, position.value == 'Employer')
+        PayrollProcessorContract.methods.createUser(name.value, email.value, password.value, position.value == 'employer')
             .send()
             .then(result => {
                 if (result.status === true) {
@@ -53,4 +53,68 @@ function signup() {
             });
     }
     return false;
+}
+
+function add_job(){
+    var form = document.getElementById("add_role_form");
+    PayrollProcessorContract.methods.createJob(form["role_name"].value,form["type_of_work"].value=='Monthly',form["pay_amount"].value,form["leave_deduction"].value,form["delay_penalty"].value)
+        .send()
+        .then(result => {
+            if (result.status === true) {
+                alert("Success");
+                console.log(result);
+                window.location.reload();
+            }
+        });
+    // console.log(jobs)
+    // jobs.push(
+    //     {
+    //         "jobid":jobs.length,
+    //         "role_name":form["role_name"].value,
+    //         "type_of_work":form["type_of_work"].value,
+    //         "pay_amount":form["pay_amount"].value,
+    //         "leave_deduction":form["leave_deduction"].value,
+    //         "delay_penalty":form["delay_penalty"].value,
+    //         "employees":[]
+    //     }
+    // )
+    // console.log(jobs)
+
+    // var table_body = document.getElementById("jobs_body")
+    // var row = table_body.insertRow(jobs.length-1);
+
+    // var cell1 = row.insertCell(0)
+    // var cell2 = row.insertCell(1)
+    // var cell3 = row.insertCell(2)
+    // var cell4 = row.insertCell(3)
+    // var cell5 = row.insertCell(4)
+    // var cell6 = row.insertCell(5)
+    // var cell7 = row.insertCell(6)
+    // var cell8 = row.insertCell(7)
+
+    // cell1.innerHTML = jobs.length;
+    // cell2.innerHTML = '<a href="/job.html?jobid='+(jobs.length-1)+'" style="text-decoration: none; color: black;">'+jobs[jobs.length-1]["role_name"]+'</a>'
+    // cell3.innerHTML = jobs[jobs.length-1]["employees"].length
+    // cell4.innerHTML = jobs[jobs.length-1]["type_of_work"]
+    // cell5.innerHTML = jobs[jobs.length-1]["pay_amount"]
+    // cell6.innerHTML = jobs[jobs.length-1]["leave_deduction"]
+    // cell7.innerHTML = jobs[jobs.length-1]["delay_penalty"]
+    // cell8.innerHTML = '<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#join"><i class="fas fa-plus"></i>&nbsp;Add Employee</a>'
+}
+
+function join_job(){
+    var form = document.getElementById("Add_job");
+    var d = new Date();
+    var n = d.getTime();
+    var endDate = Date.parse(form["end_datetime"].value);
+    console.log(form["profile"].value,endDate/1000);
+    PayrollProcessorContract.methods.joinJob(form["profile"].value,(endDate-n)/1000)
+        .send()
+        .then(result => {
+            if (result.status === true) {
+                alert("Success");
+                console.log(result);
+                window.location.reload();
+            }
+        });
 }

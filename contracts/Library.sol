@@ -46,6 +46,7 @@ library Library{
         uint amount;
         uint timestamp;
         string purpose;
+        string currency;
     }
     struct Work {
         string profile;

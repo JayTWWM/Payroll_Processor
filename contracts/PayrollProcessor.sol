@@ -30,7 +30,7 @@ contract PayrollProcessor {
         string memory _email,
         string memory _password,
         bool _isEmployer
-    ) public returns (uint256) {
+    ) public returns (uint) {
         require(
             UserStore[msg.sender].addr == address(0),
             "You Already Have An Account!"
@@ -63,7 +63,7 @@ contract PayrollProcessor {
         );
         return (UserStore[msg.sender].isEmployer,UserStore[msg.sender].name,UserStore[msg.sender].email);
     }
-    function createJob(string memory _profile,bool _isMonthly,uint _payAmount,uint _leaveDeduction,uint _delayPenalty) public returns (uint256) {
+    function createJob(string memory _profile,bool _isMonthly,uint _payAmount,uint _leaveDeduction,uint _delayPenalty) public returns (uint) {
         require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
         require(UserStore[msg.sender].isEmployer,"Not an employer!");
         require(JobStore[_profile].employerAddr == address(0),"Profile already exists!");
@@ -82,14 +82,19 @@ contract PayrollProcessor {
         emit CreateJob(UserStore[msg.sender].email,_profile,_isMonthly,_payAmount,_leaveDeduction,_delayPenalty);
     }
 
-    function joinJob(string memory _profile) public returns (uint256) {
+    function joinJob(string memory _profile,uint _duration) public returns (uint) {
         require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
         require(!UserStore[msg.sender].isEmployer,"Not an employee!");
         require(JobStore[_profile].employerAddr != address(0),"Profile Does not exist.");
+        require(JobStore[_profile].work[msg.sender].employeeAddr == address(0) || (block.timestamp)>(JobStore[_profile].work[msg.sender].startTime+JobStore[_profile].work[msg.sender].duration),"You are already in the job!");
         UserStore[msg.sender].jobCount++;
         UserStore[msg.sender].jobs[UserStore[msg.sender].jobCount] = _profile;
         JobStore[_profile].employeeCount++;
         JobStore[_profile].employeeAddr[JobStore[_profile].employeeCount] = msg.sender;
+        JobStore[_profile].work[msg.sender].profile = _profile;
+        JobStore[_profile].work[msg.sender].employeeAddr = msg.sender;
+        JobStore[_profile].work[msg.sender].startTime = block.timestamp;
+        JobStore[_profile].work[msg.sender].duration = _duration;
         emit JoinJob(UserStore[msg.sender].email,_profile);
     }
 
@@ -116,13 +121,11 @@ contract PayrollProcessor {
                 stTime,
                 dur);
     }
-    function getEmployerJob(uint ind) public view returns (string memory,string memory,string memory,bool,uint,uint,uint,uint) {
+    function getEmployerJob(uint ind) public view returns (string memory,bool,uint,uint,uint,uint) {
         require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
         string memory acc = UserStore[msg.sender].jobs[ind];
         require(JobStore[acc].employerAddr == msg.sender,"Not your job!");
         return (JobStore[acc].profile,
-                JobStore[acc].employerEmail,
-                UserStore[JobStore[acc].employerAddr].name,
                 JobStore[acc].isMonthly,
                 JobStore[acc].payAmount,
                 JobStore[acc].leaveDeduction,
@@ -148,11 +151,21 @@ contract PayrollProcessor {
         return (UserStore[acc].email,UserStore[acc].name,stTime,dur);
     }
 
+    function calculatePayment(string memory _profile,string memory _email,uint _leaves, uint _delays, uint _unitsWorked, uint extra) public view returns (uint,uint,uint,uint,uint) {
+        require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
+        require(UserStore[msg.sender].isEmployer,"Not an employer!");
+        require(JobStore[_profile].employerAddr != address(0),"Profile Does not exist.");
+        require(UserLookup[_email] != address(0),"Receiver Does not exist.");
+        uint worked = JobStore[_profile].payAmount*_unitsWorked;
+        uint leaves = JobStore[_profile].leaveDeduction*_leaves;
+        uint delay = JobStore[_profile].delayPenalty*_delays;
+        return (worked+extra-leaves-delay,worked,leaves,delay,extra);
+    } 
     
-
     event UserCreate(string name,string email,bool isEmployer);
     event CreateJob(string email,string profile, bool isMonthly, uint payAmount, uint leaveDeduction, uint delayPenalty);
     event JoinJob(string email,string profile);
+    event TransferMoney(string email_receiver,string email_sender,uint amount);
 }
 
 // contract EliteTokenSale {
