@@ -24,22 +24,21 @@ library Library{
         address addr;
         bool isEmployer;
         uint jobCount;
-        mapping(uint => Job) jobs;
+        mapping(uint => string) jobs;
         uint payCount;
         mapping(uint => Payment) payments;
     }
     struct Job {
         string profile;
-        string jobCode;
         address employerAddr;
         string employerEmail;
         bool isMonthly;
         uint payAmount;
         uint leaveDeduction;
         uint delayPenalty;
-        mapping(address => uint) startTime;
-        mapping(address => uint) duration;
-        mapping(address => User) employeeAddr;
+        uint employeeCount;
+        mapping(uint => address) employeeAddr;
+        mapping(address => Work) work;
     }
     struct Payment {
         address sender;
@@ -47,5 +46,14 @@ library Library{
         uint amount;
         uint timestamp;
         string purpose;
+    }
+    struct Work {
+        string profile;
+        address employeeAddr;
+        uint startTime;
+        uint duration;
+        uint leaves;
+        uint delay;
+        uint workUnits;
     }
 }
