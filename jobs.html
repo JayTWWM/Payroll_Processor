@@ -147,28 +147,40 @@
 
     <div class="modal" tabindex="-1" role="dialog" id="product_add_modal">
         <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Add Job</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Job</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" id="Add_job" onsubmit="return false">
+                        <label for="profile" class="form-control-label">Enter Job Profile</label>
+                        <input type="text" class="form-control" name="profile" id="profile">
+                        <label for="end_datetime" class="form-control-label">End (date and time):</label>
+                        <input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime">
+                        <button type="submit" onclick="get_details()" class="btn btn-success mt-4" id="detailsButton"><i class="fas fa-plus"></i>&nbsp;Join Job</button>
+                        <br>
+                        <label for="amount_to_pay" class="form-control-label">Base Income</label>
+                        <input type="text" class="form-control" name="amount_to_pay" readonly id="amount_to_pay" value="--">
+                        <label for="leave_deduction" class="form-control-label">Leave Deduction</label>
+                        <input type="text" class="form-control" name="leave_deduction" readonly id="leave_deduction" value="--">
+                        <label for="delay_reduction" class="form-control-label">Delay Reduction per hour</label>
+                        <input type="text" class="form-control" name="delay_reduction" readonly id="delay_reduction" value="--">
+                        <hr>
+                        <input type="checkbox" id="terms" name="terms" value="">
+                        <label for="terms">I have read the terms and conditions and agree to it.</label>
+
+
+                        <button type="submit" onclick="join_job()" class="btn btn-success mt-4" id="joinButton" style="display: none;"><i class="fas fa-plus"></i>&nbsp;Proceed</button>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
             </div>
-            <div class="modal-body">
-              <form action="" id = "Add_job" onsubmit="return false">
-                <label for="profile" class="form-control-label">Enter Job Profile</label>
-                <input type="text" class="form-control" name="profile" id="profile">
-                <label for="end_datetime" class="form-control-label">End (date and time):</label>
-                <input type="datetime-local" class="form-control" id="end_datetime" name="end_datetime">
-      
-                <button type="submit" onclick = "join_job()" class="btn btn-success mt-4"><i class="fas fa-plus"></i>&nbsp;Join Job</button>
-              </form>
-    
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-          </div>
         </div>
 
 </body>

@@ -105,15 +105,33 @@ contract PayrollProcessor {
         JobStore[_profile].work[msg.sender].duration = _duration;
         emit JoinJob(UserStore[msg.sender].email,_profile);
     }
+    function getJobDetails(string memory _profile) public view returns (uint,uint,uint,bool) {
+        require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
+        require(JobStore[_profile].employerAddr != address(0),"Profile Does not exist.");
+        return (JobStore[_profile].payAmount,JobStore[_profile].leaveDeduction,JobStore[_profile].delayPenalty,JobStore[_profile].isMonthly);
+    }
 
     function getJobCount() public view returns (uint,bool) {
         require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
         return (UserStore[msg.sender].jobCount,UserStore[msg.sender].isEmployer);
     }
-    function getEmployeeJob(uint ind) public view returns (string memory,string memory,string memory,bool,uint,uint,uint,uint,uint) {
+    function getTransCount() public view returns (uint) {
+        require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
+        return UserStore[msg.sender].payCount;
+    }
+    function getTransaction(uint _ind) public view returns (string memory,string memory, uint, uint, string memory,string memory) {
+        require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
+        return (UserStore[UserStore[msg.sender].payments[_ind].sender].name,
+        UserStore[UserStore[msg.sender].payments[_ind].reciever].name,
+        UserStore[msg.sender].payments[_ind].amount,
+        UserStore[msg.sender].payments[_ind].timestamp,
+        UserStore[msg.sender].payments[_ind].purpose,
+        UserStore[msg.sender].payments[_ind].currency);
+    }
+    function getEmployeeJob(uint _ind) public view returns (string memory,string memory,string memory,bool,uint,uint,uint,uint,uint) {
         require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
         require(!UserStore[msg.sender].isEmployer,"Not an employee!");
-        string memory acc = UserStore[msg.sender].jobs[ind];
+        string memory acc = UserStore[msg.sender].jobs[_ind];
         uint stTime = JobStore[acc].work[msg.sender].startTime;
         uint dur = JobStore[acc].work[msg.sender].duration;
         if (JobStore[acc].employerAddr == address(0) || (block.timestamp)>(stTime+dur)) {
@@ -178,6 +196,8 @@ contract PayrollProcessor {
         require(tokenContract.transferFrom(msg.sender,UserLookup[_email],_amount),"Transaction Failed");
         UserStore[msg.sender].payCount++;
         UserStore[msg.sender].payments[UserStore[msg.sender].payCount] = Library.Payment(msg.sender,UserLookup[_email],_amount,block.timestamp,_purpose,"ELT");
+        UserStore[UserLookup[_email]].payCount++;
+        UserStore[UserLookup[_email]].payments[UserStore[UserLookup[_email]].payCount] = Library.Payment(msg.sender,UserLookup[_email],_amount,block.timestamp,_purpose,"ELT");
         emit TransferMoney(_email,UserStore[msg.sender].email,_amount,_purpose);
     }
 

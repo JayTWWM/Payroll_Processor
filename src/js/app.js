@@ -1,15 +1,22 @@
+var name1;
+
 function signin() {
     var signin_form = document.getElementById("sign-in-form");
-    //   var email = signin_form['signin_email'];
     var password = signin_form['signin_password'];
     //   console.log(email.value);
-    console.log(password.value);
+    // console.log(password.value);
     PayrollProcessorContract.methods.logInUser(password.value)
-        .send()
-        .then(result => {
-            if (result.status === true) {
-                alert("Success");
-                console.log(result);
+        .call((error, response) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(response);
+                name1 = response[1].toString();
+                if (response[0]) {
+                    window.location.href = window.location.href + "dashboardEmployer.html?name=" + name1;
+                } else {
+                    window.location.href = window.location.href + "dashboard.html?name=" + name1;
+                }
             }
         });
     return false;
@@ -33,7 +40,7 @@ function signup() {
     var position = signup_form['position'];
     console.log(name.value);
     console.log(email.value);
-    console.log(password.value);
+    // console.log(password.value);
     console.log(position.value);
 
     if (!ValidateEmail(email.value)) {
@@ -49,6 +56,13 @@ function signup() {
                 if (result.status === true) {
                     alert("Success");
                     console.log(result);
+                    name1 = name.value;
+                    console.log(name1);
+                    if (position.value == "employer") {
+                        window.location.href = window.location.href + "dashboardEmployer.html?name=" + name1;
+                    } else {
+                        window.location.href = window.location.href + "dashboard.html?name=" + name1;
+                    }
                 }
             });
     }
@@ -103,20 +117,23 @@ function add_job() {
 }
 
 function join_job() {
-    var form = document.getElementById("Add_job");
-    var d = new Date();
-    var n = d.getTime();
-    var endDate = Date.parse(form["end_datetime"].value);
-    console.log(form["profile"].value, endDate / 1000);
-    PayrollProcessorContract.methods.joinJob(form["profile"].value, (endDate - n) / 1000)
-        .send()
-        .then(result => {
-            if (result.status === true) {
-                alert("Success");
-                console.log(result);
-                window.location.reload();
-            }
-        });
+    var check = document.getElementById('terms');
+    if (check.checked) {
+        var form = document.getElementById("Add_job");
+        var d = new Date();
+        var n = d.getTime();
+        var endDate = Date.parse(form["end_datetime"].value);
+        console.log(form["profile"].value, endDate / 1000);
+        PayrollProcessorContract.methods.joinJob(form["profile"].value, (endDate - n) / 1000)
+            .send()
+            .then(result => {
+                if (result.status === true) {
+                    alert("Success");
+                    console.log(result);
+                    window.location.reload();
+                }
+            });
+    }
 }
 
 function calculate_payment() {
@@ -162,6 +179,43 @@ function make_payment() {
             if (result.status === true) {
                 alert("Success");
                 console.log(result);
+            }
+        });
+}
+
+function make_payment_members() {
+    var email = document.getElementById('emailor').value;
+    var amount = document.getElementById('payment').value;
+    var purpose = document.getElementById('purpose').value;
+    console.log(email, amount, purpose);
+    PayrollProcessorContract.methods.makeTransfer(email, amount, purpose)
+        .send()
+        .then(result => {
+            if (result.status === true) {
+                alert("Success");
+                console.log(result);
+            }
+        });
+}
+
+function get_details() {
+    var profile = document.getElementById('profile').value;
+    PayrollProcessorContract.methods.getJobDetails(profile)
+        .call((error, response) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(response);
+                var payment = response[0];
+                if (response[3]) {
+                    payment += '/Month';
+                } else {
+                    payment += '/Hour';
+                }
+                document.getElementById('amount_to_pay').value = payment;
+                document.getElementById('leave_deduction').value = response[1];
+                document.getElementById('delay_reduction').value = response[2];
+                document.getElementById('joinButton').style.display = "block";
             }
         });
 }
