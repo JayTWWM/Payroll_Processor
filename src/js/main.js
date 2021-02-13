@@ -9,3 +9,10 @@ sign_up_btn.addEventListener("click", () => {
 sign_in_btn.addEventListener("click", () => {
     container.classList.remove("sign-up-mode");
 });
+
+function mail() {
+    var invite_form = document.getElementById("invite_form");
+    console.log(invite_form)
+    var email = invite_form['email'].value;
+    window.location.href = "mailto:" + email + "?body=Hi&subject=Invite via Email"
+}
