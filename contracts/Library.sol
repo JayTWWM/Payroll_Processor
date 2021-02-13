@@ -52,8 +52,8 @@ library Library{
         address employeeAddr;
         uint startTime;
         uint duration;
-        uint leaves;
-        uint delay;
-        uint workUnits;
+        // uint leaves;
+        // uint delay;
+        // uint workUnits;
     }
 }

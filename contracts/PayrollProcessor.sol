@@ -93,10 +93,37 @@ contract PayrollProcessor {
         emit JoinJob(UserStore[msg.sender].email,_profile);
     }
 
-
+    function getJobCount() public view returns (uint,bool) {
+        require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
+        return (UserStore[msg.sender].jobCount,UserStore[msg.sender].isEmployer);
+    }
+    function getJob(uint ind) public view returns (string memory,string memory,string memory,bool,uint,uint,uint,uint) {
+        require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
+        string memory acc = UserStore[msg.sender].jobs[ind];
+        return (JobStore[acc].profile,JobStore[acc].employerEmail,UserStore[JobStore[acc].employerAddr].name,JobStore[acc].isMonthly,JobStore[acc].payAmount,JobStore[acc].leaveDeduction,JobStore[acc].delayPenalty,JobStore[acc].employeeCount);
+    }
+    
+    function getEmployeeCount(string memory _profile) public view returns (uint) {
+        require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
+        require(UserStore[msg.sender].isEmployer,"Not an employer!");
+        require(JobStore[_profile].employerAddr != address(0),"Profile Does not exist.");
+        return JobStore[_profile].employeeCount;
+    }
+    function getEmployee(string memory _profile, uint ind) public view returns (string memory, string memory, uint, uint) {
+        require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
+        require(UserStore[msg.sender].isEmployer,"Not an employer!");
+        require(JobStore[_profile].employerAddr != address(0),"Profile Does not exist.");
+        address acc = JobStore[_profile].employeeAddr[ind];
+        uint stTime = JobStore[_profile].work[acc].startTime;
+        uint dur = JobStore[_profile].work[acc].duration;
+        if (acc == address(0) || (block.timestamp)>(stTime+dur)) {
+            return ("None","None",0,0);
+        }
+        return (UserStore[acc].email,UserStore[acc].name,stTime,dur);
+    }
 
     event UserCreate(string name,string email,bool isEmployer);
-    event CreateJob(string email,string profile, bool isMonthly, uint payAmount, uint leaveDeduction, uint delayPanalty);
+    event CreateJob(string email,string profile, bool isMonthly, uint payAmount, uint leaveDeduction, uint delayPenalty);
     event JoinJob(string email,string profile);
 }
 
