@@ -146,7 +146,7 @@ function calculate_payment() {
 
 function make_payment() {
     var email = currentEmployee;
-    var amount = parseInt(document.getElementById('payment').value);
+    var amount = document.getElementById('payment').value;
     // var queryString = decodeURIComponent(window.location.search);
     // queryString = queryString.substring(1);
     // var queries = queryString.split("&");

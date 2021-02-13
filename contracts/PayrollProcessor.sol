@@ -25,6 +25,14 @@ contract PayrollProcessor {
     mapping(address => Library.User) UserStore;
     mapping(string => address) private UserLookup;
 
+    EliteToken public tokenContract;
+    uint256 public tokenPrice;
+
+    constructor (EliteToken _tokenContract, uint256 _tokenPrice) public {
+        tokenContract = _tokenContract;
+        tokenPrice = _tokenPrice;
+    }
+
     function createUser(
         string memory _name,
         string memory _email,
@@ -166,8 +174,7 @@ contract PayrollProcessor {
     function makeTransfer(string memory _email, uint _amount, string memory _purpose) public returns (uint) {
         require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
         require(UserLookup[_email] != address(0),"Receiver Does not exist.");
-        EliteToken tokenContract;
-        require(tokenContract.approve(msg.sender,_amount),"Amount not approved!");
+        // require(tokenContract.approve(msg.sender,_amount+10),"Amount not approved!");
         require(tokenContract.transferFrom(msg.sender,UserLookup[_email],_amount),"Transaction Failed");
         UserStore[msg.sender].payCount++;
         UserStore[msg.sender].payments[UserStore[msg.sender].payCount] = Library.Payment(msg.sender,UserLookup[_email],_amount,block.timestamp,_purpose,"ELT");
@@ -182,8 +189,8 @@ contract PayrollProcessor {
 
 // contract EliteTokenSale {
 //     address admin;
-//     EliteToken public tokenContract;
-//     uint256 public tokenPrice;
+    // EliteToken public tokenContract;
+    // uint256 public tokenPrice;
 //     uint256 public tokensSold;
 
 //     event Sell(address _buyer, uint256 _amount);

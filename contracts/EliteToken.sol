@@ -38,17 +38,17 @@ contract EliteToken {
         return true;
     }
 
-    function approve(address _spender, uint256 _value) public returns (bool success) {
-        allowance[msg.sender][_spender] = _value;
+    // function approve(address _spender, uint256 _value) public returns (bool success) {
+    //     allowance[msg.sender][_spender] = _value;
 
-        emit Approval(msg.sender, _spender, _value);
+    //     emit Approval(msg.sender, _spender, _value);
 
-        return true;
-    }
+    //     return true;
+    // }
 
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
         require(_value <= balanceOf[_from],"Not enough Funds!");
-        require(_value <= allowance[_from][msg.sender],"Not enough Allowance!");
+        // require(_value <= allowance[_from][msg.sender],"Not enough Allowance!");
 
         balanceOf[_from] -= _value;
         balanceOf[_to] += _value;
