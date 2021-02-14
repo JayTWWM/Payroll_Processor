@@ -198,25 +198,25 @@ contract PayrollProcessor {
         UserStore[msg.sender].payments[UserStore[msg.sender].payCount] = Library.Payment(msg.sender,UserLookup[_email],_amount,block.timestamp,_purpose,"ELT");
         UserStore[UserLookup[_email]].payCount++;
         UserStore[UserLookup[_email]].payments[UserStore[UserLookup[_email]].payCount] = Library.Payment(msg.sender,UserLookup[_email],_amount,block.timestamp,_purpose,"ELT");
-        emit TransferMoney(_email,UserStore[msg.sender].email,_amount,_purpose);
+        emit TransferMoney(_email,UserStore[msg.sender].email,_amount,_purpose,"ELT");
     }
 
-    function makeThirdPartyTransfer(string memory _email, uint _amount, string memory _purpose, string memory _currency) public returns (uint) {
-        require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
-        require(UserLookup[_email] != address(0),"Receiver Does not exist.");
-        // require(tokenContract.approve(msg.sender,_amount+10),"Amount not approved!");
-        // require(tokenContract.transferFrom(msg.sender,UserLookup[_email],_amount),"Transaction Failed");
-        UserStore[msg.sender].payCount++;
-        UserStore[msg.sender].payments[UserStore[msg.sender].payCount] = Library.Payment(msg.sender,UserLookup[_email],_amount,block.timestamp,_purpose,_currency);
-        UserStore[UserLookup[_email]].payCount++;
-        UserStore[UserLookup[_email]].payments[UserStore[UserLookup[_email]].payCount] = Library.Payment(msg.sender,UserLookup[_email],_amount,block.timestamp,_purpose,_currency);
-        emit TransferMoney(_email,UserStore[msg.sender].email,_amount,_purpose);
-    }
+    // function makeThirdPartyTransfer(string memory _email, uint _amount, string memory _purpose, string memory _currency) public returns (uint) {
+    //     require(UserStore[msg.sender].addr != address(0),"You dont have an account!");
+    //     require(UserLookup[_email] != address(0),"Receiver Does not exist.");
+    //     // require(tokenContract.approve(msg.sender,_amount+10),"Amount not approved!");
+    //     // require(tokenContract.transferFrom(msg.sender,UserLookup[_email],_amount),"Transaction Failed");
+    //     UserStore[msg.sender].payCount++;
+    //     UserStore[msg.sender].payments[UserStore[msg.sender].payCount] = Library.Payment(msg.sender,UserLookup[_email],_amount,block.timestamp,_purpose,_currency);
+    //     UserStore[UserLookup[_email]].payCount++;
+    //     UserStore[UserLookup[_email]].payments[UserStore[UserLookup[_email]].payCount] = Library.Payment(msg.sender,UserLookup[_email],_amount,block.timestamp,_purpose,_currency);
+    //     emit TransferMoney(_email,UserStore[msg.sender].email,_amount,_purpose,_currency);
+    // }
 
     event UserCreate(string name,string email,bool isEmployer);
     event CreateJob(string email,string profile, bool isMonthly, uint payAmount, uint leaveDeduction, uint delayPenalty);
     event JoinJob(string email,string profile);
-    event TransferMoney(string email_receiver,string email_sender,uint amount,string purpose);
+    event TransferMoney(string email_receiver,string email_sender,uint amount,string purpose,string currency);
 }
 
 // contract EliteTokenSale {
